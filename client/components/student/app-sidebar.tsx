@@ -38,8 +38,8 @@ import { Medal, Settings } from "lucide-react"
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "John Doe",
+    email: "johdoe011@gmail.com.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -48,20 +48,11 @@ const data = {
       url: "/student",
       icon: IconDashboard,
     },
-      {
-      title: "Notification",
-      url: "/notifications",
-      icon: IconBell,
-    },
+
     {
       title: "Courses",
       url: "/courses",
       icon: IconListDetails,
-    },
-    {
-      title: "Rooms",
-      url: "/rooms",
-      icon: IconUsers,
     },
     {
       title: "Achievements",
@@ -138,13 +129,8 @@ const data = {
     {
       name: "Saved Docs",
       url: "/saveddocs",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
       icon: IconReport,
-    },
+    }
   ],
 }
 

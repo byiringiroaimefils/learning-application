@@ -89,10 +89,6 @@ export function NavUser({
                 <IconUserCircle />
                 <Link href="/student/account">Account</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
