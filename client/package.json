@@ -13,6 +13,7 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@hookform/resolvers": "^5.2.2",
     "@next/font": "^14.2.15",
     "@preline/datepicker": "^3.2.0",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -36,6 +37,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "form": "^0.2.5",
     "framer-motion": "^12.23.12",
     "install": "^0.13.0",
     "jquery": "^3.7.1",
@@ -48,12 +50,13 @@
     "preline": "^3.2.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.63.0",
     "recharts": "^3.1.2",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2",
-    "zod": "^4.0.14"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -40,7 +40,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
   const totalLessons = sections.flatMap(section => section.items).length || 0
   const completedLessons = sections.flatMap(section => section.items).filter(item => item.completed).length || 0
   const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
-  const allLessonsCompleted = totalLessons > 0 && completedLessons === totalLessons
+  // const allLessonsCompleted = totalLessons > 0 && completedLessons === totalLessons
   const examUnlocked = course ? isExamUnlocked(course.id) : false
 
   const toggleSection = (sectionId: string) => {
@@ -60,7 +60,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
       const newCompleted = !item.completed
       updateCourseProgress(course.id, itemId, newCompleted)
       updateLessonLocks(course.id)
-      
+
       setSections(
         sections.map(section => ({
           ...section,
@@ -71,7 +71,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
           ),
         }))
       )
-      
+
       // Check if all lessons are completed and show exam access
       const updatedSections = sections.map(section => ({
         ...section,
@@ -81,10 +81,10 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
             : item
         ),
       }))
-      
+
       const updatedCompletedLessons = updatedSections.flatMap(section => section.items).filter(item => item.completed).length
       const updatedAllLessonsCompleted = totalLessons > 0 && updatedCompletedLessons === totalLessons
-      
+
       // If all lessons are now completed and exam exists, show notification
       if (updatedAllLessonsCompleted && course.finalExam && !course.finalExam.completed) {
         setTimeout(() => {
@@ -135,16 +135,6 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                 </Link>
               </Button>
             </div>
-            <div className="flex items-center space-x-2 w-full sm:w-auto">
-              <Button variant="outline" size="sm" className="hover:bg-green-50 border-gray-300 hover:border-green-200 flex-1 sm:flex-none">
-                <Share className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Share</span>
-              </Button>
-              <Button variant="outline" size="sm" className="hover:bg-purple-50 border-gray-300 hover:border-purple-200 flex-1 sm:flex-none">
-                <Download className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Resources</span>
-              </Button>
-            </div>
           </div>
 
           {/* Course Hero Card */}
@@ -163,10 +153,6 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                       {course.description}
                     </p>
                     <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-6 text-sm">
-                      <div className="flex items-center space-x-2 px-3 sm:px-4 py-2">
-                        <Clock className="h-4 w-4 text-blue-500" />
-                        <span className="font-medium">{course.duration}</span>
-                      </div>
                       <div className="flex items-center space-x-2 px-3 sm:px-4 py-2">
                         <Users className="h-4 w-4 text-green-500" />
                         <span className="font-medium">{course.instructor}</span>
@@ -201,36 +187,8 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
           </Card>
 
           {/* Course Statistics */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
-            <Card className="bg-white p-3 sm:p-6 border border-blue-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm text-gray-600 font-medium">Progress</p>
-                    <p className="text-xl sm:text-3xl font-bold text-blue-600">{progress}%</p>
-                  </div>
-                  <div className="w-8 h-8 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Target className="h-4 w-4 sm:h-6 sm:w-6 text-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white p-3 sm:p-6 border border-green-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-xs sm:text-sm text-gray-600 font-medium">Completed</p>
-                    <p className="text-xl sm:text-3xl font-bold text-green-600">{completedLessons}</p>
-                  </div>
-                  <div className="w-8 h-8 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <CheckCircle2 className="h-4 w-4 sm:h-6 sm:w-6 text-green-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white p-3 sm:p-6 border border-purple-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-6 mb-6 sm:mb-8 w-full ">
+            <Card className="bg-white p-3 sm:p-6 border border-purple-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300 w-full">
               <CardContent className="p-0">
                 <div className="flex items-center justify-between">
                   <div>
@@ -244,7 +202,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
               </CardContent>
             </Card>
 
-            <Card className="bg-white p-3 sm:p-6 border border-orange-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="bg-white p-3 sm:p-6 border border-orange-100 dark:bg-black shadow-lg hover:shadow-xl transition-all duration-300" >
               <CardContent className="p-0">
                 <div className="flex items-center justify-between">
                   <div>
@@ -342,13 +300,6 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                                     )}
 
                                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
-                                      <div className="flex items-center space-x-1 bg-blue-100 dark:bg-blue-900/30 px-2 sm:px-3 py-1 rounded-full">
-                                        <Clock className="h-3 w-3 text-blue-600" />
-                                        <span className="font-medium text-blue-700 dark:text-blue-300 text-xs sm:text-sm">25 min</span>
-                                      </div>
-                                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 font-medium text-xs">
-                                        video
-                                      </Badge>
                                       <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 text-xs font-medium">
                                         {course.level.toLowerCase()}
                                       </Badge>
@@ -358,12 +309,6 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
 
                                 {/* Enhanced Action Section */}
                                 <div className="flex items-center justify-between sm:justify-end space-x-2 sm:space-x-4 w-full sm:w-auto">
-                                  {item.completed && (
-                                    <Badge className="bg-green-500 text-white px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-bold shadow-lg animate-pulse">
-                                      <span className="hidden sm:inline">✨ COMPLETED</span>
-                                      <span className="sm:hidden">✓</span>
-                                    </Badge>
-                                  )}  
                                   <div className="flex items-center space-x-2">
                                     <Button
                                       variant="ghost"
@@ -391,7 +336,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                                     >
                                       {item.completed ? (
                                         <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                       
+
                                       ) : (
                                         <Circle className="h-4 w-4" />
                                       )}
@@ -413,7 +358,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
             {course?.finalExam && (
               <Card className={cn(
                 "shadow-xl hover:shadow-2xl transition-all duration-300 sm:hover:scale-[1.01]",
-                examUnlocked 
+                examUnlocked
                   ? "bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50 border-purple-200 dark:from-purple-950/20 dark:via-pink-950/20 dark:to-purple-950/20 dark:border-purple-800"
                   : "bg-gradient-to-r from-gray-50 via-gray-100 to-gray-50 border-gray-300 dark:from-gray-900/20 dark:via-gray-800/20 dark:to-gray-900/20 dark:border-gray-700 opacity-75"
               )}>
@@ -422,7 +367,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                     <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6 w-full sm:w-auto">
                       <div className={cn(
                         "w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-base sm:text-lg flex-shrink-0",
-                        examUnlocked 
+                        examUnlocked
                           ? "bg-purple-600 text-white"
                           : "bg-gray-400 text-gray-200"
                       )}>
@@ -439,17 +384,17 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                         )}>
                           {course.finalExam.title || "Comprehensive Knowledge Assessment"}
                         </h3>
-                        
+
                         {!examUnlocked && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                             Complete all lessons to unlock the final exam
                           </p>
                         )}
-                        
+
                         <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
                           <div className={cn(
                             "flex items-center space-x-1 px-2 sm:px-3 py-1 rounded-full",
-                            examUnlocked 
+                            examUnlocked
                               ? "bg-purple-100 dark:bg-purple-900/30"
                               : "bg-gray-100 dark:bg-gray-800/30"
                           )}>
@@ -459,38 +404,38 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                             )} />
                             <span className={cn(
                               "font-medium text-xs sm:text-sm",
-                              examUnlocked 
+                              examUnlocked
                                 ? "text-purple-700 dark:text-purple-300"
                                 : "text-gray-500 dark:text-gray-400"
                             )}>45 min</span>
                           </div>
-                          
+
                           {course.finalExam.questions && (
                             <Badge className={cn(
                               "font-medium text-xs sm:text-sm",
-                              examUnlocked 
+                              examUnlocked
                                 ? "bg-pink-500 text-white"
                                 : "bg-gray-400 text-gray-200"
                             )}>
                               {course.finalExam.questions.length} Questions
                             </Badge>
                           )}
-                          
+
                           <Badge variant="outline" className={cn(
                             "text-xs font-medium",
-                            examUnlocked 
+                            examUnlocked
                               ? "bg-pink-50 text-pink-700 border-pink-200"
                               : "bg-gray-50 text-gray-500 border-gray-300"
                           )}>
                             {course.finalExam.passingScore || 70}% to pass
                           </Badge>
-                          
+
                           {course.finalExam.completed && (
                             <Badge className="bg-green-500 text-white font-medium text-xs sm:text-sm animate-pulse">
                               ✓ Completed
                             </Badge>
                           )}
-                          
+
                           {examUnlocked && !course.finalExam.completed && (
                             <Badge className="bg-yellow-500 text-white font-medium text-xs sm:text-sm animate-bounce">
                               🎯 Ready to Take!
@@ -499,13 +444,13 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                         </div>
                       </div>
                     </div>
-                    
+
                     <Button
                       variant="ghost"
                       size="sm"
                       className={cn(
                         "p-2 sm:p-3 rounded-full transition-all duration-300 sm:hover:scale-110 self-end sm:self-auto",
-                        examUnlocked 
+                        examUnlocked
                           ? "text-purple-600 hover:text-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950/30"
                           : "text-gray-400 cursor-not-allowed"
                       )}
@@ -521,7 +466,7 @@ export default function CourseOverviewPage({ params: paramsPromise }: { params: 
                       )}
                     </Button>
                   </div>
-                  
+
                   {/* Progress indicator for exam unlock */}
                   {!examUnlocked && (
                     <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">

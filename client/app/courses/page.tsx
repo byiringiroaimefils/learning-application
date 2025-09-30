@@ -315,7 +315,7 @@ export default function CoursesPage() {
                             </Badge>
                             <div className="flex items-center gap-1">
                               <BookOpen className="w-4 h-4" />
-                              <span>{course.sections?.length || 0} sections</span>
+                              <span>{course.sections?.length || 0} Indicative Content</span>
                             </div>
                           </div>
 

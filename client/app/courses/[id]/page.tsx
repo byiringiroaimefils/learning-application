@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, use } from "react"
-import { ChevronDown, ChevronRight, Check, ArrowLeft, Play, Pause, Volume2, Maximize, Settings, Eye, Clock, Users, Star, Award, Target, BookOpen, Trophy, Zap, Menu, X, Lock, CheckCircle } from "lucide-react"
+import { ChevronDown, ChevronRight, Check, ArrowLeft, Eye, Clock, Users, Star, Award, Target, BookOpen, Trophy, Zap, Menu, X, Lock, CheckCircle } from "lucide-react"
 import { AppSidebar } from "@/components/student/app-sidebar"
 import { SiteHeader } from "@/components/student/site-header"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { coursesData, Course, CourseItem, CourseSection, updateCourseProgress, setActiveLesson, getNextLesson, getPreviousLesson, updateLessonLocks, canAccessLesson, isExamUnlocked } from "@/data/courses"
 
@@ -59,7 +58,7 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
   // Navigation helpers
   const previousItem = currentItemIndex > 0 ? allItems[currentItemIndex - 1] : null
   const nextItem = currentItemIndex < allItems.length - 1 ? allItems[currentItemIndex + 1] : null
-  
+
   // Check if next lesson is accessible
   const canGoToNext = nextItem ? canAccessLesson(course?.id || '', nextItem.id) : false
   const examUnlocked = course ? isExamUnlocked(course.id) : false
@@ -79,10 +78,10 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
     if (item && course) {
       const newCompleted = !item.completed
       updateCourseProgress(course.id, itemId, newCompleted)
-      
+
       // Update lesson locks after completion change
       updateLessonLocks(course.id)
-      
+
       // Update local state
       setSections(
         sections.map(section => ({
@@ -113,9 +112,9 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
       if (!canAccessLesson(course.id, itemId)) {
         return // Don't allow access to locked lessons
       }
-      
+
       setActiveLesson(course.id, itemId)
-      
+
       // Update local state
       setSections(
         sections.map(section => ({
@@ -166,18 +165,18 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
 
   const submitExam = () => {
     if (!course?.finalExam) return
-    
+
     let correctAnswers = 0
     course.finalExam.questions.forEach(question => {
       if (examAnswers[question.id] === question.correctAnswer) {
         correctAnswers++
       }
     })
-    
+
     const score = Math.round((correctAnswers / course.finalExam.questions.length) * 100)
     setExamScore(score)
     setExamSubmitted(true)
-    
+
     // Mark exam as completed if passed
     if (score >= course.finalExam.passingScore) {
       course.finalExam.completed = true
@@ -197,50 +196,9 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const progressPercentage = (currentTime / duration) * 100
 
-  // Generate dynamic learning objectives based on course content
-  const generateLearningObjectives = (course: Course) => {
-    const baseObjectives = [
-      `Master ${course.title} fundamentals`,
-      `Apply ${course.level.toLowerCase()} level concepts`,
-      `Build practical skills in ${course.duration}`,
-      `Complete hands-on projects and exercises`
-    ]
-    return baseObjectives
-  }
 
-  // Generate prerequisites based on course level and title
-  const generatePrerequisites = (course: Course) => {
-    const levelPrereqs = {
-      'Beginner': [
-        'Basic computer skills',
-        'Text editor familiarity',
-        'Willingness to learn',
-        'Internet connection'
-      ],
-      'Intermediate': [
-        'Programming fundamentals',
-        'Development environment setup',
-        'Version control basics',
-        'Problem-solving skills'
-      ],
-      'Advanced': [
-        'Solid programming foundation',
-        'Industry experience preferred',
-        'Complex problem-solving skills',
-        'Advanced tooling knowledge'
-      ]
-    }
-    return levelPrereqs[course.level as keyof typeof levelPrereqs] || levelPrereqs['Beginner']
-  }
 
-  // Calculate study statistics
-  const studyStats = {
-    timeSpent: '1h 17m', // This could be tracked in real implementation
-    studyStreak: Math.min(7 + Math.floor(completedLessons / 5), 30), // Dynamic streak based on progress
-    nextMilestone: totalLessons > 0 ? Math.ceil((completedLessons + 1) / totalLessons * 100 / 10) * 10 : 50
-  }
 
   return (
     <SidebarProvider
@@ -251,7 +209,7 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
     >
       {/* Desktop Sidebar */}
       <AppSidebar variant="inset" className="hidden lg:flex" />
-      
+
       <SidebarInset>
         <SiteHeader />
 
@@ -305,20 +263,13 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                             {course.level}
                           </Badge>
                           <Badge className="bg-green-100 text-green-800 px-2 py-1 text-xs">
-                            HD Quality
-                          </Badge>
-                          <Badge className="bg-purple-100 text-purple-800 px-2 py-1 text-xs">
-                            {course.duration}
+                            Software Development
                           </Badge>
                         </div>
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
                           {currentItem?.title || `${course.title} - Getting Started`}
                         </h1>
                         <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                          <div className="flex items-center space-x-1 sm:space-x-2">
-                            <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
-                            <span className="font-medium">{formatTime(duration)}</span>
-                          </div>
                           <div className="flex items-center space-x-1 sm:space-x-2">
                             <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
                             <span className="font-medium">{Math.floor(Math.random() * 100000) + 10000} views</span>
@@ -337,44 +288,6 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                       </div>
                     </div>
                   </div>
-
-                  {/* Course Video - Show only at the beginning of first lesson */}
-                  {course?.video && currentItem?.id === sections[0]?.items[0]?.id && (
-                    <Card className="overflow-hidden shadow-2xl border-0 group mb-6">
-                      <CardContent className="p-0">
-                        <div className="relative aspect-video w-full flex items-center justify-center bg-gray-900">
-                          {course.video.includes('youtube.com') || course.video.includes('youtu.be') ? (
-                            <iframe
-                              src={course.video}
-                              className="w-full h-full"
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                            />
-                          ) : (
-                            <video
-                              src={course.video}
-                              controls
-                              className="w-full h-full"
-                              poster="/api/placeholder/800/450"
-                            />
-                          )}
-                          <Button
-                            size="lg"
-                            className="absolute z-10 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-white/15 hover:bg-white/25 border-2 border-white/30 backdrop-blur-md transition-all duration-300 hover:scale-110 shadow-2xl"
-                            onClick={() => setIsPlaying(!isPlaying)}
-                          >
-                            {isPlaying ? (
-                              <Pause className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-white drop-shadow-lg" />
-                            ) : (
-                              <Play className="h-6 w-6 sm:h-8 sm:w-8 lg:h-10 lg:w-10 text-white ml-1 drop-shadow-lg" />
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
                   {/* Final Exam Interface */}
                   {showExam && course?.finalExam && (
                     <Card className="shadow-2xl border-0 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 rounded-2xl">
@@ -518,63 +431,6 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                     </Card>
                   )}
 
-                  {/* Enhanced Learning Content Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-                    <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-gray-300 dark:from-blue-950/20 dark:to-cyan-950/20 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <CardHeader className="pb-3 sm:pb-4">
-                        <CardTitle className="text-lg sm:text-xl flex items-center text-blue-700 dark:text-blue-300 font-bold">
-                          🎯 Learning Objectives
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3 sm:space-y-4">
-                        {generateLearningObjectives(course).map((objective, index) => (
-                          <div key={index} className="flex items-start space-x-3 sm:space-x-4">
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mt-0.5 shadow-md flex-shrink-0">
-                              <span className="text-white text-xs sm:text-sm font-bold">{index + 1}</span>
-                            </div>
-                            <span className="text-xs sm:text-sm text-blue-700 dark:text-blue-300 font-medium leading-relaxed">{objective}</span>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-
-                    <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-gray-300 dark:from-purple-950/20 dark:to-pink-950/20 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <CardHeader className="pb-3 sm:pb-4">
-                        <CardTitle className="text-lg sm:text-xl flex items-center text-purple-700 dark:text-purple-300 font-bold">
-                          📋 Prerequisites
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3 sm:space-y-4">
-                        {generatePrerequisites(course).map((prereq, index) => (
-                          <div key={index} className="flex items-start space-x-3 sm:space-x-4">
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-600 rounded-full flex items-center justify-center mt-0.5 shadow-md flex-shrink-0">
-                              <Check className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
-                            </div>
-                            <span className="text-xs sm:text-sm text-purple-700 dark:text-purple-300 font-medium leading-relaxed">{prereq}</span>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Enhanced Lesson Content */}
-                  {currentItem?.content && (
-                    <Card className="shadow-lg border-gray-300 hover:shadow-xl transition-all duration-300">
-                      <CardHeader className="pb-3 sm:pb-4">
-                        <CardTitle className="text-lg sm:text-xl flex items-center font-bold">
-                          📚 Lesson Content
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose dark:prose-invert max-w-none prose-sm sm:prose-base">
-                          <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line text-sm sm:text-base">
-                            {currentItem.content}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
                   {/* Enhanced Navigation */}
                   <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
                     <Button
@@ -606,8 +462,8 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                         <Button
                           className={cn(
                             "w-full sm:w-auto flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 shadow-lg hover:shadow-xl transition-all duration-300 text-sm",
-                            canGoToNext 
-                              ? "bg-green-500 text-white hover:bg-green-600" 
+                            canGoToNext
+                              ? "bg-green-500 text-white hover:bg-green-600"
                               : "bg-gray-400 text-gray-200 cursor-not-allowed"
                           )}
                           onClick={goToNextLesson}
@@ -758,7 +614,7 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                           )}
                         </div>
                       ))}
-                      
+
                       {/* Final Exam Section */}
                       {course?.finalExam && (
                         <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-600">
@@ -811,65 +667,6 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                       )}
                     </CardContent>
                   </Card>
-
-                  {/* Enhanced Today's Stats */}
-                  <Card className="shadow-lg border border-gray-300 dark:border-green-900">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="text-lg font-bold flex items-center">
-                        <Target className="h-5 w-5 mr-2 text-green-600" />
-                        Today&apos;s Stats
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-between items-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          <Clock className="h-4 w-4 mr-2 text-blue-500" />
-                          Time spent
-                        </span>
-                        <span className="text-sm font-bold text-blue-700 dark:text-blue-300">{studyStats.timeSpent}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          🔥 Study streak
-                        </span>
-                        <span className="text-sm font-bold text-orange-600">{studyStats.studyStreak} days</span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          <Award className="h-4 w-4 mr-2 text-purple-500" />
-                          Next milestone
-                        </span>
-                        <span className="text-sm font-bold text-purple-600">{studyStats.nextMilestone}%</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Dynamic Study Tips */}
-                  <Card className="shadow-lg border-gray-300 dark:from-indigo-950/20 dark:to-purple-950/20 border-2 dark:border-indigo-800">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="text-lg font-bold flex items-center text-indigo-700 dark:text-indigo-300">
-                        💡 Study Tip
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <p className="text-sm text-indigo-700 dark:text-indigo-300 leading-relaxed">
-                          <strong>
-                            {course.level === 'Beginner' && 'Take Your Time:'}
-                            {course.level === 'Intermediate' && 'Practice Makes Perfect:'}
-                            {course.level === 'Advanced' && 'Deep Dive:'}
-                          </strong>{' '}
-                          {course.level === 'Beginner' && 'Don\'t rush through the basics. Make sure you understand each concept before moving forward.'}
-                          {course.level === 'Intermediate' && 'Apply what you learn immediately. Build small projects to reinforce your understanding.'}
-                          {course.level === 'Advanced' && 'Challenge yourself with real-world scenarios and explore beyond the course material.'}
-                        </p>
-                        <div className="flex items-center space-x-2 text-xs text-indigo-600 dark:text-indigo-400">
-                          <Star className="h-3 w-3" />
-                          <span>Pro tip from {course.instructor || 'our expert instructors'}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
             </div>
@@ -879,11 +676,11 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
           {showMobileSidebar && (
             <div className="fixed inset-0 z-50 lg:hidden">
               {/* Backdrop */}
-              <div 
-                className="fixed inset-0 bg-black/50" 
+              <div
+                className="fixed inset-0 bg-black/50"
                 onClick={() => setShowMobileSidebar(false)}
               />
-              
+
               {/* Sidebar */}
               <div className="fixed right-0 top-0 h-full w-80 max-w-[90vw] bg-white dark:bg-gray-800 shadow-2xl overflow-y-auto">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
@@ -897,7 +694,7 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
-                
+
                 <div className="p-4 space-y-4">
                   {/* Mobile Learning Progress */}
                   <Card className="shadow-lg border-2 border-blue-100 dark:border-blue-900">
@@ -1010,7 +807,7 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                           )}
                         </div>
                       ))}
-                      
+
                       {/* Final Exam Section - Mobile */}
                       {course?.finalExam && (
                         <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-600">
@@ -1063,71 +860,12 @@ export default function CourseLearningPage({ params: paramsPromise }: { params: 
                       )}
                     </CardContent>
                   </Card>
-
-                  {/* Mobile Stats */}
-                  <Card className="shadow-lg border border-gray-300">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-bold flex items-center">
-                        <Target className="h-4 w-4 mr-2 text-green-600" />
-                        Today&apos;s Stats
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex justify-between items-center p-2 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          <Clock className="h-3 w-3 mr-2 text-blue-500" />
-                          Time spent
-                        </span>
-                        <span className="text-sm font-bold text-blue-700 dark:text-blue-300">{studyStats.timeSpent}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          🔥 Study streak
-                        </span>
-                        <span className="text-sm font-bold text-orange-600">{studyStats.studyStreak} days</span>
-                      </div>
-                      <div className="flex justify-between items-center p-2 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center">
-                          <Award className="h-3 w-3 mr-2 text-purple-500" />
-                          Next milestone
-                        </span>
-                        <span className="text-sm font-bold text-purple-600">{studyStats.nextMilestone}%</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Mobile Study Tip */}
-                  <Card className="shadow-lg border-gray-300 border-2 dark:border-indigo-800">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-base font-bold flex items-center text-indigo-700 dark:text-indigo-300">
-                        💡 Study Tip
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <p className="text-sm text-indigo-700 dark:text-indigo-300 leading-relaxed">
-                          <strong>
-                            {course.level === 'Beginner' && 'Take Your Time:'}
-                            {course.level === 'Intermediate' && 'Practice Makes Perfect:'}
-                            {course.level === 'Advanced' && 'Deep Dive:'}
-                          </strong>{' '}
-                          {course.level === 'Beginner' && 'Don\'t rush through the basics. Make sure you understand each concept before moving forward.'}
-                          {course.level === 'Intermediate' && 'Apply what you learn immediately. Build small projects to reinforce your understanding.'}
-                          {course.level === 'Advanced' && 'Challenge yourself with real-world scenarios and explore beyond the course material.'}
-                        </p>
-                        <div className="flex items-center space-x-2 text-xs text-indigo-600 dark:text-indigo-400">
-                          <Star className="h-3 w-3" />
-                          <span>Pro tip from {course.instructor || 'our expert instructors'}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
             </div>
           )}
         </div>
       </SidebarInset>
-    </SidebarProvider>
+    </SidebarProvider >
   )
 }
